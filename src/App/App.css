@@ -11,7 +11,14 @@ body{
   width: 100%;
 }
 #mapid { 
-  height: 88vh; 
-  margin: 95px 1% 0 1%;
+  height: 81vh; 
+  margin: 85px 1% 0 1%;
   z-index: 10;
+}
+@media (min-width: 481px) and (max-width: 767px) {
+
+  #mapid{
+    height: 75vh; 
+  }
+  
 }

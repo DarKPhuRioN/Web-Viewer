@@ -1,10 +1,12 @@
 import React from 'react';
 import * as Leaflet from 'leaflet';
+import axios from 'axios';
 import './App.css';
 import Header from './../components/Header/header';
 import Footer from './../components/Footer/footer';
+import Splash from '../components/Splash/splash';
 
-//const server = 'localhost://4000/';
+const server = 'http://localhost:4009/locations';
 
 class App extends React.Component {
 
@@ -17,32 +19,49 @@ class App extends React.Component {
         lat: 1.571595,
         lng: -75.1233689
       },
-      zoom: 15
+      zoom: 15,
+      loading: true
     }
   }
 
   componentDidMount(){
-    this.map = Leaflet.map('mapid').setView(
-      [
-        this.state.coordenate.lat,
-        this.state.coordenate.lng
-      ], 
-      this.state.zoom
-    );
+    setTimeout(() => {
 
-    this.initLayerMap();
+      this.setState({
+        loading: false,
+      });
+
+      this.map = Leaflet.map('mapid').setView(
+        [
+          this.state.coordenate.lat,
+          this.state.coordenate.lng
+        ], 
+        this.state.zoom
+      );
+  
+      this.initLayerMap();
+  
+      this.getSHPGeoJson();
+    }, 2200);
   }
 
   render(){
-    return (
-      
-      <div id="main">
-        <Header titleOne="Villa" titleTwo="Hermosa"></Header>
-        <div id="mapid"></div>
-        <Footer></Footer>
-      </div>
-      
-    );
+    if(this.state.loading){
+      return(
+        <Splash></Splash>
+      );
+    }
+    else
+    {
+      return(
+        <div id="main">
+          <Header titleOne="Villa" titleTwo="Hermosa"></Header>
+          <div id="mapid"></div>
+          <Footer></Footer>
+        </div>
+      );
+    }
+    
   }
   
   initLayerMap(){
@@ -70,6 +89,13 @@ class App extends React.Component {
     )
     .setContent("Punto Central")
     .openOn(this.map);
+  }
+
+  getSHPGeoJson(){
+    axios.get(`${server}/test`)
+    .then(res => {
+      alert(`Desde el backend dice: ${res.data.data[0].tipo}`)
+    })
   }
 
 }
